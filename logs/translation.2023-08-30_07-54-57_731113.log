@@ -1,0 +1,1 @@
+2023-08-30 07:54:57.725 | ERROR    | doc_analyze.doc_analyze:run:16 - An error occurred during translation: unhashable type: 'list'

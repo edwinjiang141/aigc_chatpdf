@@ -1,0 +1,4 @@
+input_file: "tests/Oracle advice.pdf"
+model_name: "gpt-3.5-turbo"
+source_language: "Chinese"
+target_language: "English"

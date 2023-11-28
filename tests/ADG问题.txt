@@ -1,0 +1,24 @@
+问题：密码文件错误导致备库无法连接主库。 
+影响范围：日志无法正常同步。
+处理方案：
+1、使用 cksum 命令分别在主库和 standby 库所在的主机上验证密码文件的大小	
+具体命令：
+cd $ORACLE_HOME/dbs
+cksum  密码文件名 /* cksum 命令只可以在 UNIX 平台上使用*/
+md5sum密码文件名 /* md5sum命令只可以在 linux平台上使用*/
+
+2、如果文件大小是不同的，您需要在主库的一个节点上创建一个新的密码文件，并拷贝到其它节点以及 standby 主机上
+具体命令：
+UNIX
+orapwd file=$ORACLE_HOME/dbs/orapw<local ORACLE_SID> password=<sys password> entries=5
+Windows
+orapwd file=$ORACLE_HOME/database/PWD<local ORACLE_SID>.ora password=<sys password> entries=5
+拷贝至主库其他节点以及备库所有节点
+
+问题：备库磁盘空间不足创建数据文件失败
+影响范围：备库创建数据文件失败，dg无法正常同步
+处理方案1：修改standby_file_management为MANUAL alter system set standby_file_management=manual sid=* scope=both
+处理方案2：备库查看有问题的数据文件 select name from v$datafile where name like '%UNNAME%'
+处理方案3：增加对应数据文件目录空间 
+处理方案4：修改数据文件放置在满足空间的的目录下 alter database create datafile '/u01/oracle/product/db9ir2/dbs/UNNAMED00195' as '/dev/oradata06/rproplh_data_122.dbf';
+处理方案5：修改standby_file_management为AUTO  alter system set standby_file_management=auto sid=* scope=both
